@@ -17,10 +17,23 @@ public class RentACatImpl implements RentACat {
 	 * @return true if cat exists and was rented out, false otherwise
 	 */
 
-	public boolean returnCat(int id) {
-		// TODO: Fill in
-		return false;
+	 public boolean returnCat(int id) {
+		Cat c = getCat(id);
+		if (c == null) {          // add this null check
+			System.out.print("Invalid cat ID.\n");
+			return false;
+		}
+	
+		if (c.getRented()) {       // ensure that the cat is rented
+			c.returnCat();         // return the cat
+			System.out.print("Welcome back, " + c.getName() + "!\n");
+			return true;           // return true
+		}
+	
+		System.out.print(c.getName() + " is already here!\n");
+		return false;              // if the cat is not rented or does not exist, return false
 	}
+	
 
 	/**
 	 * Rent a cat. This should call the .rentCat() method on the cat for the
@@ -32,10 +45,23 @@ public class RentACatImpl implements RentACat {
 	 * @return true if cat exists and was not rented out, false otherwise
 	 */
 
-	public boolean rentCat(int id) {
-		// TODO: Fill in
-		return false;
+	 public boolean rentCat(int id) {
+		Cat c = getCat(id); 
+		if (c == null) {          	// add this null check
+			System.out.print("Invalid cat ID.\n");
+			return false;
+		}
+	
+		if (!c.getRented()) {		// ensure that the cat is not rented
+			c.rentCat();
+			System.out.print(c.getName() + " has been rented.\n");
+			return true;			// return true
+		}
+	
+		System.out.print("Sorry, " + c.getName() + " is not here!\n");
+		return false;				// if the cat is not rented or does not exist, return false
 	}
+	
 
 	/**
 	 * Rename a cat. This calls the .renameCat(String) method on the cat for the
@@ -47,8 +73,12 @@ public class RentACatImpl implements RentACat {
 	 */
 
 	public boolean renameCat(int id, String name) {
-		// TODO: Fill in
-		return false;
+		Cat c = getCat(id); 
+		if (c != null) {          		// ensure that the cat exists
+			c.renameCat(name);			// rename the cat
+			return true;				// return true
+		}
+		return false; 					// if the cat does not exist, return false
 	}
 
 	/**
@@ -62,8 +92,13 @@ public class RentACatImpl implements RentACat {
 	 */
 
 	public String listCats() {
-		// TODO: Fill in
-		return "WRITE CODE FOR THIS";
+		StringBuilder catList = new StringBuilder();
+		for (Cat c : cats) {  			// loop through the cats
+			if (!c.getRented()) { 		// if the cat is not rented
+				catList.append("ID " + c.getId() + ". " + c.getName() + "\n"); 	// add the cat to the list
+			}
+		}
+		return catList.toString(); 		// return the list
 	}
 
 	/**
@@ -93,7 +128,7 @@ public class RentACatImpl implements RentACat {
 		// If we get all the way through the list and did
 		// not find a cat whose ID matches the passed-in
 		// ID, then the cat is not in the list
-		System.out.println("Invalid cat ID.");
+		System.out.print("Invalid cat ID.\n");
 		return null;
 
 	}
